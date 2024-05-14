@@ -11,5 +11,6 @@
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/testing_n_poc.iml
 __pycache__/
+
 new/__pycache__/
 
