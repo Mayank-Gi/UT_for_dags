@@ -1,0 +1,54 @@
+{
+  "cvm_fsn_location_config": {
+    "default_args": {
+      "owner": "CVM_TEAM",
+      "retries": 1,
+      "retry_delay": 300,
+      "catchup": false,
+      "params": {
+        "vertica_conn_id": "vertica_etl",
+        "stg_schema": "CVM_STG",
+        "target_schema": "CVM_ODS",
+        "s3_conn_id": "cvm_prd_s3",
+        "sql_path": "fsn_location.sql",
+        "s3_bucket": "cvm-prod-landing-5d6c06b",
+        "s3_location": "location/fsn/",
+        "to_emails": [
+          "nitin.verma-e@maf.ae"
+        ],
+        "dag_audit_table": "CVM_ODS.cvm_audit",
+        "dag_audit_table_old": "CVM_STG.cvm_audit",
+        "dag_audit_src_tbl": [
+          "ca_ods.ods_fsn_dw_dim_Store"
+        ],
+        "dag_audit_table_type": [
+          "src",
+          "tgt"
+        ],
+        "dag_audit_src_tbl_count_sql": [
+          "select count(*) from CA_ODS.ods_fsn_dw_dim_Store  where active_flag = 1",
+          "select count(*) from cvm_stg.stg_cvm_fsn_location_v2"
+        ],
+        "load_date_range": [
+          "current_date()",
+          "current_date()"
+        ],
+        "source_tables": [
+          "ca_ods.ods_fsn_dw_dim_Store"
+        ],
+        "incerment_query": "select current_date()",
+        "src_table_or_view": "none",
+        "scr_query": "select count(*) from CA_ODS.ods_fsn_dw_dim_Store  where active_flag = 1 ",
+        "filter_on_scr_query": "None",
+        "src_incremental_column": "None",
+        "excel_table": "cvm_stg.stg_cvm_fsn_location_v2",
+        "excel_query": "select count(*) from cvm_stg.stg_cvm_fsn_location_v2",
+        "filter_on_excel_query": "None",
+        "excel_incremental_column": "None"
+      },
+      "start_date": "2023-04-06",
+      "schedule_interval": "0 5 * * *",
+      "max_active_runs": 1
+    }
+  }
+}
