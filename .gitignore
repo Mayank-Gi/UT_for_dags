@@ -1,0 +1,15 @@
+/personal
+/personal.pub
+/.idea/csv-editor.xml
+/nps.csv
+/.idea/vcs.xml
+/.idea/.gitignore
+/.pylintrc
+/new/cvm_fsn_location_config.json
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/testing_n_poc.iml
+__pycache__/
+new/__pycache__/
+
