@@ -374,10 +374,10 @@ bu_external=bu_external.filter(
             .select('gcr_id','external_id').distinct()
 
 Flowing_df_ext_id = Flowing_df.join(
-    how="inner",
-    other=bu_external,
-    on="idi_counterparty_gr"
-    == "gcr_id"
+    bu_external,
+    Flowing_df["idi_counterparty_gr"] == bu_external["gcr_id"],
+    how="inner"
+)
 
 Flowing_df_ext_id = Flowing_df_ext_id.drop("idi_counterparty_gr").withColumnRenamed(
     "external_id", "idi_counterparty_gr")
