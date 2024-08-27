@@ -113,12 +113,12 @@ cvm_environment = args['cvm_environment']
 # defining transaction dataframe consisting all BU's, with KSA region only and removing future dates
 conformed_trans_path = get_s3_path(conformed.Transactions, lake_descriptor)
 trx = DeltaTable.forPath(spark, conformed_trans_path).toDF()
-trx.show()
+# trx.show()
 trx=trx.filter(
                 (col(conformed.Transactions.des_country_name.name) == 'KSA')
                & (col(conformed.Transactions.dat_date_type_1.name) <= current_date())
-               ).select("idi_counterparty_gr","dat_date_type_1","cua_amount_type_1","idi_turnover")
-trx.show()
+               ).select("idi_counterparty_gr","dat_date_type_1","cua_amount_type_1","idi_turnover","bu","cod_sor_gr","des_country_name","des_maf_brand_name")
+# trx.show()
 
 
 # created trx_fsn df for lifestyle transactions
@@ -376,14 +376,17 @@ bu_external=bu_external.filter(
 Flowing_df_ext_id = Flowing_df.join(
     bu_external,
     Flowing_df["idi_counterparty_gr"] == bu_external["gcr_id"],
-    how="inner"
-)
+    how="inner")
 
 Flowing_df_ext_id = Flowing_df_ext_id.drop("idi_counterparty_gr").withColumnRenamed(
     "external_id", "idi_counterparty_gr")
-Flowing_df_ext_id.dropdulicates("idi_counterparty_gr")
+Flowing_df_ext_id = Flowing_df_ext_id.dropDuplicates(["idi_counterparty_gr"])
 Flowing_df_ext_id.show()
+num_partitions = Flowing_df_ext_id.rdd.getNumPartitions()
+print(f"Number of partitions: {num_partitions}")
 # creat_delta_table_if_not_exists(spark, conformed.ProfileCalculatedKpi, lake_descriptor)
 # kpi_path = get_s3_path(conformed.ProfileCalculatedKpi, lake_descriptor)
 # s3://cvm-uat-conformed-d5b175d/calculated_kpi_ksa/
-# Flowing_df.write.format('delta').mode('overwrite').option("overwriteSchema", "True").save(kpi_path)
+# Flowing_df.write.format('delta').mode('overwrite').option("overwriteSchema", "True").save("s3://cvm-uat-conformed-d5b175d/calculated_kpi_ksa/")
+# Flowing_df_ext_id.write.format('delta').mode('overwrite').option("overwriteSchema", "True").save("s3://cvm-uat-conformed-d5b175d/calculated_kpi_extID_ksa/")
+
